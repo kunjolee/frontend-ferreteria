@@ -12,6 +12,8 @@ export const ArticlePage = () => {
     const [saveUpdate, setSaveUpdate] = useState(true); // true -> save
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [textResponse, setTextResponse] = useState('');
+    const [id, setId] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,14 +32,23 @@ export const ArticlePage = () => {
 
     console.log(data);
 
-    const handleClick = (flag = true) => {
+    const handleClick = (flag = true, id = 0) => {
         setSaveUpdate(flag);
         handleShow(true);
+        setId(id);
     };
 
-    const handleDeleted = () => {
+    const handleDeleted = async (e, idArticulo) => {
         if (confirm('Are you sure you want to delete this article?')) {
-            console.log('deleted');
+            try {
+                const { data } = await api.post('/deleteArticle', {
+                    idArticulo,
+                });
+                const { response_description } = data;
+                setTextResponse(response_description);
+            } catch (error) {
+                console.log('Error deleting article');
+            }
         }
     };
 
@@ -65,11 +76,17 @@ export const ArticlePage = () => {
                                 <td>{el.stock}</td>
                                 <td>{el.precio}</td>
                                 <td>
-                                    <Button variant='warning' onClick={() => handleClick(false)}>
+                                    <Button
+                                        variant='warning'
+                                        onClick={() => handleClick(false, el.idArticulo)}
+                                    >
                                         <FiEdit height={59} />
                                     </Button>
                                     &nbsp;
-                                    <Button variant='danger' onClick={handleDeleted}>
+                                    <Button
+                                        variant='danger'
+                                        onClick={(e) => handleDeleted(e, el.idArticulo)}
+                                    >
                                         <MdDeleteOutline />
                                     </Button>
                                 </td>
@@ -78,11 +95,11 @@ export const ArticlePage = () => {
                     </tbody>
                 </Table>
             )}
+            {textResponse && <p style={{ fontSize: '32px' }}>{textResponse}</p>}
 
             <Button variant='primary' onClick={() => handleClick()}>
                 Add new article
             </Button>
-
             {saveUpdate ? (
                 <ModalLayout modalTitle='Save your new article!'>
                     <SaveArticle />
