@@ -1,13 +1,11 @@
-import { CustomNavbar, ProjectIntegrants } from '../components/ui/';
+import { ProjectIntegrants } from '../components/ui/';
+import { AppLayout } from '../layouts/AppLayout';
 
 export const HomePage = () => {
     return (
-        <>
-            <CustomNavbar />
-            <div style={{ padding: '0 1rem 1rem' }}>
-                <h1 style={{ marginTop: '1rem' }}>Ferreteria</h1>
-                <ProjectIntegrants />
-            </div>
-        </>
+        <AppLayout>
+            <h1>Ferreteria</h1>
+            <ProjectIntegrants />
+        </AppLayout>
     );
 };
