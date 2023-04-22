@@ -9,7 +9,7 @@ export const ProjectIntegrants = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     gap: '2rem',
-                    margin: '1rem 0',
+
                     flexWrap: 'wrap',
                 }}
             >

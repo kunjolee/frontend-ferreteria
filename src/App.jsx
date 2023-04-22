@@ -1,10 +1,10 @@
-import { CustomNavbar } from './components/ui/Navbar';
-import { HomePage } from './pages/HomePage';
+import { ArticlePage, HomePage } from './pages/';
 
 export const App = () => {
     return (
         <>
-            <HomePage />
+            {/* <HomePage /> */}
+            <ArticlePage />
         </>
     );
 };
