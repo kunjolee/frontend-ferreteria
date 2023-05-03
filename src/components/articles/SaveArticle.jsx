@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
+import { modalContext } from '../../context/ModalContext';
 
 const initialForm = {
     nombre: '',
@@ -13,6 +14,7 @@ export const SaveArticle = () => {
     const { formState, onInputChange, onResetForm, nombre, stock, precio } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
     const [textResponse, setTextResponse] = useState('');
+    const { handleClose } = useContext(modalContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +24,8 @@ export const SaveArticle = () => {
             const { data } = await api.post('/saveArticle', formState);
             const { response_description } = data;
             setTextResponse(response_description);
+            onResetForm();
+            handleClose();
         } catch (error) {
             setTextResponse('Error saving article');
         } finally {
