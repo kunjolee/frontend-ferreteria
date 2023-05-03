@@ -9,11 +9,10 @@ import { api } from '../api';
 
 export const ArticlePage = () => {
     const { handleShow } = useContext(modalContext);
-    const [saveUpdate, setSaveUpdate] = useState(true); // true -> save
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [textResponse, setTextResponse] = useState('');
-    const [id, setId] = useState(0);
+    const [articleToEdit, setArticleToEdit] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,12 +29,9 @@ export const ArticlePage = () => {
         fetchData();
     }, []);
 
-    console.log(data);
-
-    const handleClick = (flag = true, id = 0) => {
-        setSaveUpdate(flag);
-        handleShow(true);
-        setId(id);
+    const handleClick = (currentArticle) => {
+        handleShow();
+        setArticleToEdit(currentArticle);
     };
 
     const handleDeleted = async (e, idArticulo) => {
@@ -76,10 +72,7 @@ export const ArticlePage = () => {
                                 <td>{el.stock}</td>
                                 <td>{el.precio}</td>
                                 <td>
-                                    <Button
-                                        variant='warning'
-                                        onClick={() => handleClick(false, el.idArticulo)}
-                                    >
+                                    <Button variant='warning' onClick={() => handleClick(el)}>
                                         <FiEdit height={59} />
                                     </Button>
                                     &nbsp;
@@ -100,13 +93,13 @@ export const ArticlePage = () => {
             <Button variant='primary' onClick={() => handleClick()}>
                 Add new article
             </Button>
-            {saveUpdate ? (
+            {!articleToEdit ? (
                 <ModalLayout modalTitle='Save your new article!'>
                     <SaveArticle />
                 </ModalLayout>
             ) : (
-                <ModalLayout modalTitle='Edit your article'>
-                    <UpdateArticle />
+                <ModalLayout modalTitle={`Update article: ${articleToEdit.nombre}`}>
+                    <UpdateArticle idArticulo={articleToEdit.idArticulo} />
                 </ModalLayout>
             )}
         </AppLayout>
