@@ -28,11 +28,14 @@ export const UpdateUser = ({ idUser = 0 }) => {
                 idUser,
                 ...formState,
             });
+            const { response } = data
+            console.log({ response })
+
             const { response_description } = data;
 
             setTextResponse(response_description);
             onResetForm();
-            handleClose();
+            //handleClose();
 
         } catch (error) {
             console.log('Error updating User');

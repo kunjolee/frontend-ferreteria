@@ -106,7 +106,7 @@ export const UserPage = () => {
                 </ModalLayout>
             ) : (
                 <ModalLayout modalTitle={`Update article: ${userToEdit.correo}`}>
-                    <UpdateUser idArticulo={userToEdit.idUser} />
+                    <UpdateUser idUser={userToEdit.idUser} />
                 </ModalLayout>
             )}
         </AppLayout>
