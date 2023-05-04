@@ -62,7 +62,7 @@ export const UserPage = () => {
                 <Table striped bordered hover variant='dark' style={{ textAlign: 'center' }}>
                     <thead>
                         <tr>
-                            <th>idArticulo</th>
+                            <th>idUsuario</th>
                             <th>Correo</th>
                             <th>Teléfono</th>
                             <th>Dirección</th>
