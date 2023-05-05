@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     nombre: '',
@@ -13,7 +14,6 @@ const initialForm = {
 export const UpdateArticle = ({ idArticulo = 0 }) => {
     const { formState, onInputChange, onResetForm, nombre, stock, precio } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
 
     const { handleClose } = useContext(modalContext);
 
@@ -26,12 +26,16 @@ export const UpdateArticle = ({ idArticulo = 0 }) => {
                 idArticulo,
                 ...formState,
             });
-            const { response_description } = data;
 
-            setTextResponse(response_description);
+            const { response_description, response } = data;
+
+            if (response === 0) {
+                throw new Error('Error');
+            }
+            swalMessage({ text: response_description, title: 'Updated!' });
+
             onResetForm();
-            //handleClose();
-
+            handleClose();
         } catch (error) {
             console.log('Error updating Article');
         } finally {
@@ -67,7 +71,6 @@ export const UpdateArticle = ({ idArticulo = 0 }) => {
                     />
                     <Form.Text className='text-muted'>Insert your new price</Form.Text>
                 </Form.Group>
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit
