@@ -1,11 +1,9 @@
-import { ArticlePage, HomePage, ClientsPage } from './pages/';
+import { AppRouter } from './routes/AppRouter';
 
 export const App = () => {
     return (
         <>
-            {/* <HomePage /> */}
-            {/*<ArticlePage />*/}
-            <ClientsPage />
+            <AppRouter />
         </>
     );
 };
