@@ -5,7 +5,7 @@ import { FiEdit, MdDeleteOutline } from 'react-icons/all';
 import { modalContext } from '../context/ModalContext';
 import { AppLayout, ModalLayout } from '../layouts/';
 import { SaveUser, UpdateUser } from '../components/users/'
-
+import { swalMessage } from '../helpers'
 
 
 import { api } from '../api';
@@ -15,7 +15,6 @@ export const UserPage = () => {
     const { handleShow } = useContext(modalContext);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [textResponse, setTextResponse] = useState('');
     const [userToEdit, setUserToEdit] = useState(null);
 
     useEffect(() => {
@@ -23,7 +22,6 @@ export const UserPage = () => {
             setLoading(true);
             try {
                 const { data } = await api.get('/listUsers');
-                console.log({ data })
                 setData(data.users);
             } catch (error) {
                 console.log('Error fetching data');
@@ -39,16 +37,26 @@ export const UserPage = () => {
         setUserToEdit(currentUser);
     };
 
-    const handleDeleted = async (e, idUser) => {
-        if (confirm('Are you sure you want to delete this user?')) {
+    const handleDeleted = async (e, idUsuario) => {
+
+
+
+        if ( confirm('Are you sure you want to delete it?') ) {
             try {
                 const { data } = await api.post('/deleteUser', {
-                    idUser,
+                    idUsuario,
                 });
-                const { response_description } = data;
-                setTextResponse(response_description);
+                const { response_description, response } = data;
+
+
+                if( response === 0 ){
+                    throw new Error('Error!')
+                }
+                swalMessage({ text: response_description, title: 'Deleted!' })
+                
+
             } catch (error) {
-                console.log('Error deleting user');
+                swalMessage({text: 'Something went wrong', title: 'Error!', icon: 'error'})
             }
         }
     };
@@ -71,9 +79,9 @@ export const UserPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((el) => (
-                            <tr key={el.idUser}>
-                                <td>{el.idUser}</td>
+                        {data?.map(( el ) => (
+                            <tr key={el.idUsuario}>
+                                <td>{el.idUsuario}</td>
                                 <td>{el.correo}</td>
                                 <td>{el.telefono}</td>
                                 <td>{el.direccion}</td>
@@ -85,7 +93,7 @@ export const UserPage = () => {
                                     &nbsp;
                                     <Button
                                         variant='danger'
-                                        onClick={(e) => handleDeleted(e, el.idUser)}
+                                        onClick={(e) => handleDeleted(e, el?.idUsuario)}
                                     >
                                         <MdDeleteOutline />
                                     </Button>
@@ -95,18 +103,16 @@ export const UserPage = () => {
                     </tbody>
                 </Table>
             )}
-            {textResponse && <p style={{ fontSize: '32px' }}>{textResponse}</p>}
-
             <Button variant='primary' onClick={() => handleClick()}>
                 Add new user
             </Button>
             {!userToEdit ? (
-                <ModalLayout modalTitle='Save your new article!'>
+                <ModalLayout modalTitle='Save your new User!!'>
                     <SaveUser />
                 </ModalLayout>
             ) : (
-                <ModalLayout modalTitle={`Update article: ${userToEdit.correo}`}>
-                    <UpdateUser idUser={userToEdit.idUser} />
+                <ModalLayout modalTitle={`Update User: ${userToEdit.correo}`}>
+                    <UpdateUser idUsuario={userToEdit.idUsuario} />
                 </ModalLayout>
             )}
         </AppLayout>

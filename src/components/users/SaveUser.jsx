@@ -1,8 +1,10 @@
 import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
+
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     correo: '',
@@ -15,7 +17,6 @@ export const SaveUser = () => {
     const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } = useForm(initialForm);
 
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
     const { handleClose } = useContext(modalContext);
 
     const handleSubmit = async (e) => {
@@ -25,14 +26,19 @@ export const SaveUser = () => {
         try {
             
             const { data } = await api.post('/saveUser', formState)
-            const { response_description } = data;
+            const { response_description, response } = data;
 
-            setTextResponse(response_description);
+
+            if( response === 0 ) {
+                throw new Error('Error!')
+            }
+            swalMessage({ text: response_description, title: 'Saved!' });
+
             onResetForm();
             handleClose();
 
         } catch (error) {
-            setTextResponse('Error saving user');
+            swalMessage( 'Something went wrong', 'Error!', 'error' );
         } finally {
             setLoading(false);
         }
@@ -84,7 +90,6 @@ export const SaveUser = () => {
                     <Form.Text className='text-muted'>Insert your birth date</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{ textResponse }</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit

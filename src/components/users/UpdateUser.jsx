@@ -1,8 +1,10 @@
 import { useContext, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     correo: '',
@@ -11,11 +13,10 @@ const initialForm = {
     fechaNacimiento: '',
 };
 
-export const UpdateUser = ({ idUser = 0 }) => {
+export const UpdateUser = ({ idUsuario = 0 }) => {
 
     const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
 
     const { handleClose } = useContext(modalContext);
 
@@ -25,20 +26,23 @@ export const UpdateUser = ({ idUser = 0 }) => {
 
         try {
             const { data } = await api.post('/updateUser', {
-                idUser,
+                    idUsuario,
                 ...formState,
             });
-            const { response } = data
-            console.log({ response })
+            
+            const { response_description, response } = data;
+        
+            if( response === 0 ) {
+                throw new Error('Error')
+            }
+            swalMessage({text: response_description, title: 'Updated!'})
 
-            const { response_description } = data;
-
-            setTextResponse(response_description);
             onResetForm();
-            //handleClose();
+            handleClose();
 
         } catch (error) {
-            console.log('Error updating User');
+            console.log({ error })
+            swalMessage({titltext: 'Something went wrong', title: 'Error!', icon: 'error'})
         } finally {
             setLoading(false);
         }
@@ -90,7 +94,6 @@ export const UpdateUser = ({ idUser = 0 }) => {
                     <Form.Text className='text-muted'>Insert your birth date</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{ textResponse }</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit
