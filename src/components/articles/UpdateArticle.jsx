@@ -30,7 +30,8 @@ export const UpdateArticle = ({ idArticulo = 0 }) => {
 
             setTextResponse(response_description);
             onResetForm();
-            handleClose();
+            //handleClose();
+
         } catch (error) {
             console.log('Error updating Article');
         } finally {
