@@ -55,7 +55,7 @@ export const UpdateClient = ({ idCliente = 0 }) => {
                     <Form.Label>apelllido</Form.Label>
                     <Form.Control
                         type='name'
-                        name='stock'
+                        name='apellido'
                         onChange={onInputChange}
                         value={apellido}
                     />
@@ -63,7 +63,7 @@ export const UpdateClient = ({ idCliente = 0 }) => {
                 </Form.Group>
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>DPI</Form.Label>
-                    <Form.Control type='name' name='precio' onChange={onInputChange} value={DPI} />
+                    <Form.Control type='name' name='DPI' onChange={onInputChange} value={DPI} />
                     <Form.Text className='text-muted'>Insert your new DPI</Form.Text>
                 </Form.Group>
                 {textResponse && <p>{textResponse}</p>}

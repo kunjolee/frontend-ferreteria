@@ -1,10 +1,11 @@
-import { ArticlePage, HomePage } from './pages/';
+import { ArticlePage, HomePage, ClientsPage } from './pages/';
 
 export const App = () => {
     return (
         <>
             {/* <HomePage /> */}
-            <ArticlePage />
+            {/*<ArticlePage />*/}
+            <ClientsPage />
         </>
     );
 };

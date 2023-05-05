@@ -46,21 +46,24 @@ export const SaveClient = () => {
                     />
                     <Form.Text className='text-muted'>Insert your name</Form.Text>
                 </Form.Group>
+
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>apellido</Form.Label>
                     <Form.Control
                         type='name'
-                        name='stock'
+                        name='apellido'
                         onChange={onInputChange}
                         value={apellido}
                     />
                     <Form.Text className='text-muted'>Insert your Last Name</Form.Text>
                 </Form.Group>
+
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>DPI</Form.Label>
-                    <Form.Control type='name' name='precio' onChange={onInputChange} value={DPI} />
+                    <Form.Control type='name' name='DPI' onChange={onInputChange} value={DPI} />
                     <Form.Text className='text-muted'>Insert your DPI</Form.Text>
                 </Form.Group>
+
                 {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>

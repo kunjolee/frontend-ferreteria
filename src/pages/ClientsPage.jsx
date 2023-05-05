@@ -99,7 +99,7 @@ export const ClientsPage = () => {
                 </ModalLayout>
             ) : (
                 <ModalLayout modalTitle={`Update Client: ${ClientToEdit.nombre}`}>
-                    <UpdateClient idArticulo={ClientToEdit.idArticulo} />
+                    <UpdateClient idArticulo={ClientToEdit.idCliente} />
                 </ModalLayout>
             )}
         </AppLayout>
