@@ -20,7 +20,7 @@ export const CustomNavbar = () => {
                                 Usuarios
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to='/Client'>
-                                Usuarios
+                                Clientes
                             </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
