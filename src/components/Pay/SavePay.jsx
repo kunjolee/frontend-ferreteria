@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, payContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
 const initialForm = {
@@ -13,6 +13,7 @@ export const SavePay = () => {
     const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
     const { handleClose } = useContext(modalContext);
+    const { createPay } = useContext(payContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,10 +21,11 @@ export const SavePay = () => {
 
         try {
             const { data } = await api.post('/saveFormaPago', formState); //agregar ruta API
-            const { response_description, response } = data;
+            const { response_description, response, idPago } = data;
             if (response === 0) {
                 throw new Error('Error!');
             }
+            createPay({ idPago, ...formState });
             swalMessage({ text: response_description, title: 'Saved!' });
             onResetForm();
             handleClose();

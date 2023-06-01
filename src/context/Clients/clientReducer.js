@@ -1,7 +1,6 @@
 export const clientReducer = (state, action) => {
     switch (action.type) {
         case 'create_client':
-            console.log('hmmm que viene en el payload', action.payload);
             return { ...state, clients: [...state.clients, action.payload] };
         case 'get_clients':
             return { ...state, clients: [...action.payload] };

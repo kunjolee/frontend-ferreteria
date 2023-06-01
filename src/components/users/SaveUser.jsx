@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, userContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
 const initialForm = {
@@ -19,6 +19,7 @@ export const SaveUser = () => {
 
     const [loading, setLoading] = useState(false);
     const { handleClose } = useContext(modalContext);
+    const { createUser } = useContext(userContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,13 +27,13 @@ export const SaveUser = () => {
 
         try {
             const { data } = await api.post('/saveUser', formState);
-            const { response_description, response } = data;
+            const { response_description, response, idUsuario } = data;
 
             if (response === 0) {
                 throw new Error('Error!');
             }
             swalMessage({ text: response_description, title: 'Saved!' });
-
+            createUser({ idUsuario, ...formState });
             onResetForm();
             handleClose();
         } catch (error) {

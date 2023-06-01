@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, payContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
 export const UpdatePay = ({ formaPago }) => {
@@ -10,21 +10,24 @@ export const UpdatePay = ({ formaPago }) => {
     const { formState, onInputChange, onResetForm, tipo } = useForm({ ...rest });
     const [loading, setLoading] = useState(false);
     const { handleClose } = useContext(modalContext);
+    const { updatePay } = useContext(payContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { data } = await api.post('/updateFormaPago', {
+            const pay = {
                 idPago,
                 ...formState,
-            });
+            };
+            const { data } = await api.post('/updateFormaPago', pay);
 
             const { response_description, response } = data;
             if (response === 0) {
                 throw new Error('Error');
             }
+            updatePay(pay);
             swalMessage({ text: response_description, title: 'Updated!' });
             onResetForm();
             handleClose();

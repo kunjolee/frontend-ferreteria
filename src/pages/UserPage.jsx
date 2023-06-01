@@ -8,11 +8,12 @@ import { SaveUser, UpdateUser } from '../components/users/';
 import { swalMessage } from '../helpers';
 
 import { api } from '../api';
+import { userContext } from '../context/';
 
 export const UserPage = () => {
     const { handleShow } = useContext(modalContext);
+    const { getUsers, deleteUser, users } = useContext(userContext);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
     const [userToEdit, setUserToEdit] = useState(null);
 
     useEffect(() => {
@@ -20,7 +21,8 @@ export const UserPage = () => {
             setLoading(true);
             try {
                 const { data } = await api.get('/listUsers');
-                setData(data.users);
+
+                getUsers(data?.users);
             } catch (error) {
                 console.log('Error fetching data');
             } finally {
@@ -46,6 +48,7 @@ export const UserPage = () => {
                 if (response === 0) {
                     throw new Error('Error!');
                 }
+                deleteUser(idUsuario);
                 swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
                 swalMessage({ text: 'Something went wrong', title: 'Error!', icon: 'error' });
@@ -71,7 +74,7 @@ export const UserPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((el) => (
+                        {users?.map((el) => (
                             <tr key={el.idUsuario}>
                                 <td>{el.idUsuario}</td>
                                 <td>{el.correo}</td>

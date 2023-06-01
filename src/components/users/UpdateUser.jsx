@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, userContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
 export const UpdateUser = ({ usuario }) => {
@@ -13,16 +13,18 @@ export const UpdateUser = ({ usuario }) => {
     const [loading, setLoading] = useState(false);
 
     const { handleClose } = useContext(modalContext);
+    const { updateUser } = useContext(userContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { data } = await api.post('/updateUser', {
+            const user = {
                 idUsuario,
                 ...formState,
-            });
+            };
+            const { data } = await api.post('/updateUser', user);
 
             const { response_description, response } = data;
 
@@ -30,7 +32,7 @@ export const UpdateUser = ({ usuario }) => {
                 throw new Error('Error');
             }
             swalMessage({ text: response_description, title: 'Updated!' });
-
+            updateUser(user);
             onResetForm();
             handleClose();
         } catch (error) {
