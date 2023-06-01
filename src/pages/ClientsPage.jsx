@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { FiEdit, MdDeleteOutline } from 'react-icons/all';
 
-import { modalContext } from '../context/ModalContext';
+import { clientContext, modalContext } from '../context/';
 import { AppLayout, ModalLayout } from '../layouts/';
 import { SaveClient, UpdateClient } from '../components/Client/';
 import { api } from '../api';
@@ -10,8 +10,8 @@ import { swalMessage } from '../helpers';
 
 export const ClientsPage = () => {
     const { handleShow } = useContext(modalContext);
+    const { getClients, clients, deleteClient } = useContext(clientContext);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
     const [ClientToEdit, setClientToEdit] = useState(null);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export const ClientsPage = () => {
             setLoading(true);
             try {
                 const { data } = await api.get('/listClients');
-                setData(data.client);
+                getClients(data?.client);
             } catch (error) {
                 console.log('Error fetching data');
             } finally {
@@ -33,7 +33,6 @@ export const ClientsPage = () => {
         handleShow();
         setClientToEdit(currentClient);
     };
-
     const handleDeleted = async (e, idCliente) => {
         if (confirm('Are you sure you want to delete this article?')) {
             try {
@@ -44,6 +43,7 @@ export const ClientsPage = () => {
                 if (response === 0) {
                     throw new Error('Error!');
                 }
+                deleteClient(idCliente);
                 swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
                 console.log('Error deleting article', error);
@@ -69,7 +69,7 @@ export const ClientsPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((el) => (
+                        {clients?.map((el) => (
                             <tr key={el.idCliente}>
                                 <td>{el.idCliente}</td>
                                 <td>{el.nombre}</td>
@@ -102,7 +102,7 @@ export const ClientsPage = () => {
                 </ModalLayout>
             ) : (
                 <ModalLayout modalTitle={`Update Client: ${ClientToEdit.nombre}`}>
-                    <UpdateClient idCliente={ClientToEdit.idCliente} />
+                    <UpdateClient cliente={ClientToEdit} />
                 </ModalLayout>
             )}
         </AppLayout>

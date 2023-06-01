@@ -5,12 +5,9 @@ import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
 import { swalMessage } from '../../helpers';
 
-const initialForm = {
-    tipo: '',
-};
-
-export const UpdatePay = ({ idPago = 0 }) => {
-    const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
+export const UpdatePay = ({ formaPago }) => {
+    const { idPago, ...rest } = formaPago;
+    const { formState, onInputChange, onResetForm, tipo } = useForm({ ...rest });
     const [loading, setLoading] = useState(false);
     const { handleClose } = useContext(modalContext);
 

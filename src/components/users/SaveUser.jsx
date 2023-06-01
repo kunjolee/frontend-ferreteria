@@ -14,7 +14,8 @@ const initialForm = {
 };
 
 export const SaveUser = () => {
-    const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } = useForm(initialForm);
+    const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } =
+        useForm(initialForm);
 
     const [loading, setLoading] = useState(false);
     const { handleClose } = useContext(modalContext);
@@ -24,21 +25,18 @@ export const SaveUser = () => {
         setLoading(true);
 
         try {
-            
-            const { data } = await api.post('/saveUser', formState)
+            const { data } = await api.post('/saveUser', formState);
             const { response_description, response } = data;
 
-
-            if( response === 0 ) {
-                throw new Error('Error!')
+            if (response === 0) {
+                throw new Error('Error!');
             }
             swalMessage({ text: response_description, title: 'Saved!' });
 
             onResetForm();
             handleClose();
-
         } catch (error) {
-            swalMessage( 'Something went wrong', 'Error!', 'error' );
+            swalMessage('Something went wrong', 'Error!', 'error');
         } finally {
             setLoading(false);
         }
@@ -53,18 +51,19 @@ export const SaveUser = () => {
                         type='email'
                         name='correo'
                         onChange={onInputChange}
-                        value={ correo }
+                        value={correo}
                     />
                     <Form.Text className='text-muted'>Insert your email</Form.Text>
                 </Form.Group>
 
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>Teléfono</Form.Label>
-                    <Form.Control 
-                        type='name' 
-                        name='telefono' 
-                        onChange={onInputChange} 
-                        value={ telefono } />
+                    <Form.Control
+                        type='name'
+                        name='telefono'
+                        onChange={onInputChange}
+                        value={telefono}
+                    />
                     <Form.Text className='text-muted'>Insert your phone number</Form.Text>
                 </Form.Group>
 
@@ -74,7 +73,7 @@ export const SaveUser = () => {
                         type='name'
                         name='direccion'
                         onChange={onInputChange}
-                        value={ direccion }
+                        value={direccion}
                     />
                     <Form.Text className='text-muted'>Insert your direction</Form.Text>
                 </Form.Group>
@@ -85,7 +84,7 @@ export const SaveUser = () => {
                         type='name'
                         name='fechaNacimiento'
                         onChange={onInputChange}
-                        value={ fechaNacimiento }
+                        value={fechaNacimiento}
                     />
                     <Form.Text className='text-muted'>Insert your birth date</Form.Text>
                 </Form.Group>

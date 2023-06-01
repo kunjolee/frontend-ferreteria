@@ -94,7 +94,7 @@ export const PayPage = () => {
                 </ModalLayout>
             ) : (
                 <ModalLayout modalTitle={`Update payment method: ${PayToEdit.tipo}`}>
-                    <UpdatePay idPago={PayToEdit.idPago} />
+                    <UpdatePay formaPago={PayToEdit} />
                 </ModalLayout>
             )}
         </AppLayout>

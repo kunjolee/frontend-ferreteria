@@ -16,7 +16,6 @@ export const BillingHistory = () => {
             try {
                 const { data } = await api.get('/listFactura');
                 const { facturas } = data;
-                console.log(facturas);
                 setData(facturas);
             } catch (error) {
                 console.log('error getting factura', error);
