@@ -22,6 +22,12 @@ export const CustomNavbar = () => {
                             <NavDropdown.Item as={Link} to='/Client'>
                                 Clientes
                             </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to='/shopping'>
+                                Shopping
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to='/billing-history'>
+                                Billing History
+                            </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
