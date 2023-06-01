@@ -3,46 +3,41 @@ import { Button, Form } from 'react-bootstrap';
 
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, userContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
-const initialForm = {
-    correo: '',
-    telefono: '',
-    direccion: '',
-    fechaNacimiento: '',
-};
-
-export const UpdateUser = ({ idUsuario = 0 }) => {
-
-    const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } = useForm(initialForm);
+export const UpdateUser = ({ usuario }) => {
+    const { idUsuario, ...rest } = usuario;
+    const { formState, onInputChange, onResetForm, correo, telefono, direccion, fechaNacimiento } =
+        useForm({ ...rest });
     const [loading, setLoading] = useState(false);
 
     const { handleClose } = useContext(modalContext);
+    const { updateUser } = useContext(userContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { data } = await api.post('/updateUser', {
-                    idUsuario,
+            const user = {
+                idUsuario,
                 ...formState,
-            });
-            
-            const { response_description, response } = data;
-        
-            if( response === 0 ) {
-                throw new Error('Error')
-            }
-            swalMessage({text: response_description, title: 'Updated!'})
+            };
+            const { data } = await api.post('/updateUser', user);
 
+            const { response_description, response } = data;
+
+            if (response === 0) {
+                throw new Error('Error');
+            }
+            swalMessage({ text: response_description, title: 'Updated!' });
+            updateUser(user);
             onResetForm();
             handleClose();
-
         } catch (error) {
-            console.log({ error })
-            swalMessage({titltext: 'Something went wrong', title: 'Error!', icon: 'error'})
+            console.log({ error });
+            swalMessage({ titltext: 'Something went wrong', title: 'Error!', icon: 'error' });
         } finally {
             setLoading(false);
         }
@@ -57,18 +52,19 @@ export const UpdateUser = ({ idUsuario = 0 }) => {
                         type='email'
                         name='correo'
                         onChange={onInputChange}
-                        value={ correo }
+                        value={correo}
                     />
                     <Form.Text className='text-muted'>Insert your email</Form.Text>
                 </Form.Group>
 
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>Teléfono</Form.Label>
-                    <Form.Control 
-                        type='name' 
-                        name='telefono' 
-                        onChange={onInputChange} 
-                        value={ telefono } />
+                    <Form.Control
+                        type='name'
+                        name='telefono'
+                        onChange={onInputChange}
+                        value={telefono}
+                    />
                     <Form.Text className='text-muted'>Insert your phone number</Form.Text>
                 </Form.Group>
 
@@ -78,7 +74,7 @@ export const UpdateUser = ({ idUsuario = 0 }) => {
                         type='name'
                         name='direccion'
                         onChange={onInputChange}
-                        value={ direccion }
+                        value={direccion}
                     />
                     <Form.Text className='text-muted'>Insert your direction</Form.Text>
                 </Form.Group>
@@ -89,7 +85,7 @@ export const UpdateUser = ({ idUsuario = 0 }) => {
                         type='name'
                         name='fechaNacimiento'
                         onChange={onInputChange}
-                        value={ fechaNacimiento }
+                        value={fechaNacimiento}
                     />
                     <Form.Text className='text-muted'>Insert your birth date</Form.Text>
                 </Form.Group>

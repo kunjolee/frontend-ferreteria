@@ -2,36 +2,36 @@ import { useContext, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { articleContext, modalContext } from '../../context/';
 import { swalMessage } from '../../helpers';
 
-const initialForm = {
-    nombre: '',
-    stock: '',
-    precio: '',
-};
+export const UpdateArticle = ({ article }) => {
+    const { idArticulo, ...rest } = article;
 
-export const UpdateArticle = ({ idArticulo = 0 }) => {
-    const { formState, onInputChange, onResetForm, nombre, stock, precio } = useForm(initialForm);
+    const { formState, onInputChange, onResetForm, nombre, stock, precio } = useForm({ ...rest });
     const [loading, setLoading] = useState(false);
 
     const { handleClose } = useContext(modalContext);
+    const { updateArticle } = useContext(articleContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { data } = await api.post('/updateArticle', {
+            const article = {
                 idArticulo,
                 ...formState,
-            });
+            };
+            const { data } = await api.post('/updateArticle', { ...article });
 
             const { response_description, response } = data;
 
             if (response === 0) {
                 throw new Error('Error');
             }
+
+            updateArticle({ ...article });
             swalMessage({ text: response_description, title: 'Updated!' });
 
             onResetForm();

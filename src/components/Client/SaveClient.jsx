@@ -2,19 +2,20 @@ import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, clientContext } from '../../context/';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     nombre: '',
     apellido: '',
-    DPI: '',
+    dpi: '',
 };
 
 export const SaveClient = () => {
-    const { formState, onInputChange, onResetForm, nombre, apellido, DPI } = useForm(initialForm);
+    const { formState, onInputChange, onResetForm, nombre, apellido, dpi } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
     const { handleClose } = useContext(modalContext);
+    const { createClient } = useContext(clientContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,12 +23,23 @@ export const SaveClient = () => {
 
         try {
             const { data } = await api.post('/saveClients', formState);
-            const { response_description } = data;
-            setTextResponse(response_description);
+            const { response_description, response, idCliente } = data;
+            if (response === 0) {
+                throw new Error('Error!');
+            }
+
+            const newClient = {
+                idCliente,
+                ...formState,
+            };
+            createClient(newClient);
+            swalMessage({ text: response_description, title: 'Saved!' });
+
             onResetForm();
             handleClose();
         } catch (error) {
-            setTextResponse('Error saving article');
+            console.log('Error saving client', error);
+            swalMessage('Something went wrong', 'Error!', 'error');
         } finally {
             setLoading(false);
         }
@@ -60,11 +72,10 @@ export const SaveClient = () => {
 
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>DPI</Form.Label>
-                    <Form.Control type='name' name='DPI' onChange={onInputChange} value={DPI} />
+                    <Form.Control type='name' name='dpi' onChange={onInputChange} value={dpi} />
                     <Form.Text className='text-muted'>Insert your DPI</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit

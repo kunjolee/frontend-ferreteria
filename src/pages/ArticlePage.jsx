@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { FiEdit, MdDeleteOutline } from 'react-icons/all';
 
-import { modalContext } from '../context/ModalContext';
+import { articleContext, modalContext } from '../context';
 import { AppLayout, ModalLayout } from '../layouts/';
 import { SaveArticle, UpdateArticle } from '../components/articles/';
 import { api } from '../api';
@@ -10,8 +10,8 @@ import { swalMessage } from '../helpers';
 
 export const ArticlePage = () => {
     const { handleShow } = useContext(modalContext);
+    const { articles, getArticles, deleteArticle } = useContext(articleContext);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
     const [articleToEdit, setArticleToEdit] = useState(null);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export const ArticlePage = () => {
             setLoading(true);
             try {
                 const { data } = await api.get('/listArticles');
-                setData(data.articles);
+                getArticles(data?.articles);
             } catch (error) {
                 console.log('Error fetching data');
             } finally {
@@ -45,7 +45,7 @@ export const ArticlePage = () => {
                 if (response === 0) {
                     throw new Error('Error!');
                 }
-
+                deleteArticle(idArticulo);
                 swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
                 console.log('Error deleting article', error);
@@ -71,7 +71,7 @@ export const ArticlePage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((el) => (
+                        {articles?.map((el) => (
                             <tr key={el.idArticulo}>
                                 <td>{el.idArticulo}</td>
                                 <td>{el.nombre}</td>
@@ -104,7 +104,7 @@ export const ArticlePage = () => {
                 </ModalLayout>
             ) : (
                 <ModalLayout modalTitle={`Update article: ${articleToEdit.nombre}`}>
-                    <UpdateArticle idArticulo={articleToEdit.idArticulo} />
+                    <UpdateArticle article={articleToEdit} />
                 </ModalLayout>
             )}
         </AppLayout>

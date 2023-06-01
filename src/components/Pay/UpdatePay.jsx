@@ -2,35 +2,38 @@ import { useContext, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
-import { modalContext } from '../../context/ModalContext';
+import { modalContext, payContext } from '../../context/';
+import { swalMessage } from '../../helpers';
 
-const initialForm = {
-    tipo: '',
-};
-
-export const UpdatePay = ({ idPago = 0 }) => {
-    const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
+export const UpdatePay = ({ formaPago }) => {
+    const { idPago, ...rest } = formaPago;
+    const { formState, onInputChange, onResetForm, tipo } = useForm({ ...rest });
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
     const { handleClose } = useContext(modalContext);
+    const { updatePay } = useContext(payContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { data } = await api.post('/updateFormaPago', {
+            const pay = {
                 idPago,
                 ...formState,
-            });
+            };
+            const { data } = await api.post('/updateFormaPago', pay);
 
-            const { response_description } = data;
-
-            setTextResponse(response_description);
-            // onResetForm();
-            // handleClose();
+            const { response_description, response } = data;
+            if (response === 0) {
+                throw new Error('Error');
+            }
+            updatePay(pay);
+            swalMessage({ text: response_description, title: 'Updated!' });
+            onResetForm();
+            handleClose();
         } catch (error) {
-            console.log('Error updating Pay');
+            console.log('Error updating Pay', error);
+            swalMessage('Something went wrong', 'Error!', 'error');
         } finally {
             setLoading(false);
         }
@@ -45,7 +48,6 @@ export const UpdatePay = ({ idPago = 0 }) => {
                     <Form.Text className='text-muted'>payment type</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit
