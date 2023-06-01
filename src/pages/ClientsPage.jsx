@@ -6,12 +6,12 @@ import { modalContext } from '../context/ModalContext';
 import { AppLayout, ModalLayout } from '../layouts/';
 import { SaveClient, UpdateClient } from '../components/Client/';
 import { api } from '../api';
+import { swalMessage } from '../helpers';
 
 export const ClientsPage = () => {
     const { handleShow } = useContext(modalContext);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [textResponse, setTextResponse] = useState('');
     const [ClientToEdit, setClientToEdit] = useState(null);
 
     useEffect(() => {
@@ -40,10 +40,14 @@ export const ClientsPage = () => {
                 const { data } = await api.post('/deleteClients', {
                     idCliente,
                 });
-                const { response_description } = data;
-                setTextResponse(response_description);
+                const { response_description, response } = data;
+                if (response === 0) {
+                    throw new Error('Error!');
+                }
+                swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
-                console.log('Error deleting article');
+                console.log('Error deleting article', error);
+                swalMessage('Something went wrong', 'Error!', 'error');
             }
         }
     };
@@ -88,7 +92,6 @@ export const ClientsPage = () => {
                     </tbody>
                 </Table>
             )}
-            {textResponse && <p style={{ fontSize: '32px' }}>{textResponse}</p>}
 
             <Button variant='primary' onClick={() => handleClick()}>
                 Add new Client

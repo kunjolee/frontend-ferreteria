@@ -33,6 +33,7 @@ export const UpdatePay = ({ idPago = 0 }) => {
             handleClose();
         } catch (error) {
             console.log('Error updating Pay', error);
+            swalMessage('Something went wrong', 'Error!', 'error');
         } finally {
             setLoading(false);
         }

@@ -28,6 +28,8 @@ export const SavePay = () => {
             onResetForm();
             handleClose();
         } catch (error) {
+            console.log('error saving payment method', error);
+            swalMessage('Something went wrong', 'Error!', 'error');
         } finally {
             setLoading(false);
         }

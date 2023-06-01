@@ -44,6 +44,7 @@ export const PayPage = () => {
                 swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
                 console.log('Error deleting payment method', error);
+                swalMessage('Something went wrong', 'Error!', 'error');
             }
         }
     };

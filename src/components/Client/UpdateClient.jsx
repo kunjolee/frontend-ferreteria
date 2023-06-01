@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     nombre: '',
@@ -13,7 +14,6 @@ const initialForm = {
 export const UpdateClient = ({ idCliente = 0 }) => {
     const { formState, onInputChange, onResetForm, nombre, apellido, DPI } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
 
     const { handleClose } = useContext(modalContext);
 
@@ -27,12 +27,13 @@ export const UpdateClient = ({ idCliente = 0 }) => {
                 ...formState,
             });
             const { response_description } = data;
+            swalMessage({ text: response_description, title: 'Updated!' });
 
-            setTextResponse(response_description);
             onResetForm();
             handleClose();
         } catch (error) {
-            console.log('Error updating Client');
+            console.log('Error updating Client', error);
+            swalMessage({ titltext: 'Something went wrong', title: 'Error!', icon: 'error' });
         } finally {
             setLoading(false);
         }
@@ -66,7 +67,6 @@ export const UpdateClient = ({ idCliente = 0 }) => {
                     <Form.Control type='name' name='DPI' onChange={onInputChange} value={DPI} />
                     <Form.Text className='text-muted'>Insert your new DPI</Form.Text>
                 </Form.Group>
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit
