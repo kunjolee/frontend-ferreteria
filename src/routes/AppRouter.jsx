@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import { HomePage, ArticlePage, UserPage, ClientsPage } from '../pages';
+import { HomePage, ArticlePage, UserPage, ClientsPage, ShoppingPage, PurchasePage } from '../pages';
+import { BillingHistory } from '../pages/BillingHistory';
+import { BillingDetails } from '../components/Billing/BillingDetails';
 
 export const AppRouter = () => {
     return (
@@ -15,6 +17,14 @@ export const AppRouter = () => {
 
             {/* ClientPage */}
             <Route path='/Client' element={<ClientsPage />} />
+
+            <Route path='/shopping' element={<ShoppingPage />} />
+
+            <Route path='/purchase' element={<PurchasePage />} />
+
+            <Route path='/billing-history' element={<BillingHistory />} />
+
+            <Route path='/billing-details' element={<BillingDetails />} />
         </Routes>
     );
 };

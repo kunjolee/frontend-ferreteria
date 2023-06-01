@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { ModalProvider } from './context/ModalContext.jsx';
+import { CartProvider, ModalProvider } from './context/';
 import { App } from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <ModalProvider>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <CartProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </CartProvider>
     </ModalProvider>
 );
