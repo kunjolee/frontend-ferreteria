@@ -4,3 +4,4 @@ export * from './HomePage';
 export * from './ClientsPage';
 export * from './ShoppingPage';
 export * from './PurchasePage';
+export * from './PayPage';
