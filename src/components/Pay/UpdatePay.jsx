@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     tipo: '',
@@ -11,7 +12,6 @@ const initialForm = {
 export const UpdatePay = ({ idPago = 0 }) => {
     const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
     const { handleClose } = useContext(modalContext);
 
     const handleSubmit = async (e) => {
@@ -24,13 +24,15 @@ export const UpdatePay = ({ idPago = 0 }) => {
                 ...formState,
             });
 
-            const { response_description } = data;
-
-            setTextResponse(response_description);
-            // onResetForm();
-            // handleClose();
+            const { response_description, response } = data;
+            if (response === 0) {
+                throw new Error('Error');
+            }
+            swalMessage({ text: response_description, title: 'Updated!' });
+            onResetForm();
+            handleClose();
         } catch (error) {
-            console.log('Error updating Pay');
+            console.log('Error updating Pay', error);
         } finally {
             setLoading(false);
         }
@@ -45,7 +47,6 @@ export const UpdatePay = ({ idPago = 0 }) => {
                     <Form.Text className='text-muted'>payment type</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit

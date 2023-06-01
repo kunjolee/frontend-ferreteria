@@ -6,12 +6,12 @@ import { modalContext } from '../context/ModalContext';
 import { AppLayout, ModalLayout } from '../layouts/';
 import { SavePay, UpdatePay } from '../components/Pay/';
 import { api } from '../api';
+import { swalMessage } from '../helpers';
 
 export const PayPage = () => {
     const { handleShow } = useContext(modalContext);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [textResponse, setTextResponse] = useState('');
     const [PayToEdit, setPayToEdit] = useState(null);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export const PayPage = () => {
                 const { data } = await api.get('/listFormaPagos');
                 setData(data.formaPago);
             } catch (error) {
-                console.log('Error fetching data');
+                console.log('Error fetching data', error);
             } finally {
                 setLoading(false);
             }
@@ -41,9 +41,9 @@ export const PayPage = () => {
                     idPago,
                 });
                 const { response_description } = data;
-                setTextResponse(response_description);
+                swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
-                console.log('Error deleting payment method');
+                console.log('Error deleting payment method', error);
             }
         }
     };
@@ -83,7 +83,6 @@ export const PayPage = () => {
                     </tbody>
                 </Table>
             )}
-            {textResponse && <p style={{ fontSize: '32px' }}>{textResponse}</p>}
 
             <Button variant='primary' onClick={() => handleClick()}>
                 Add new payment method

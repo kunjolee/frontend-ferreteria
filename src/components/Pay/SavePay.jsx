@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from '../../hooks/useForm';
 import { api } from '../../api';
 import { modalContext } from '../../context/ModalContext';
+import { swalMessage } from '../../helpers';
 
 const initialForm = {
     tipo: '',
@@ -11,7 +12,6 @@ const initialForm = {
 export const SavePay = () => {
     const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
-    const [textResponse, setTextResponse] = useState('');
     const { handleClose } = useContext(modalContext);
 
     const handleSubmit = async (e) => {
@@ -20,12 +20,14 @@ export const SavePay = () => {
 
         try {
             const { data } = await api.post('/saveFormaPago', formState); //agregar ruta API
-            const { response_description } = data;
-            setTextResponse(response_description);
+            const { response_description, response } = data;
+            if (response === 0) {
+                throw new Error('Error!');
+            }
+            swalMessage({ text: response_description, title: 'Saved!' });
             onResetForm();
             handleClose();
         } catch (error) {
-            setTextResponse('Error Saving payment method');
         } finally {
             setLoading(false);
         }
@@ -37,10 +39,9 @@ export const SavePay = () => {
                 <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>Tipo Pago</Form.Label>
                     <Form.Control type='tipo' name='tipo' onChange={onInputChange} value={tipo} />
-                    <Form.Text className='text-muted'>payment type</Form.Text>
+                    <Form.Text className='text-muted'>Payment type</Form.Text>
                 </Form.Group>
 
-                {textResponse && <p>{textResponse}</p>}
                 {loading && <p>Loading...</p>}
                 <Button variant='primary' type='submit'>
                     Submit
