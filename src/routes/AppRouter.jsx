@@ -1,5 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
-import { HomePage, ArticlePage, UserPage, ClientsPage, ShoppingPage, PurchasePage } from '../pages';
+import {
+    HomePage,
+    ArticlePage,
+    UserPage,
+    ClientsPage,
+    ShoppingPage,
+    PurchasePage,
+    PayPage,
+} from '../pages';
 import { BillingHistory } from '../pages/BillingHistory';
 import { BillingDetails } from '../components/Billing/BillingDetails';
 
@@ -25,6 +33,7 @@ export const AppRouter = () => {
             <Route path='/billing-history' element={<BillingHistory />} />
 
             <Route path='/billing-details' element={<BillingDetails />} />
+            <Route path='/payment-method' element={<PayPage />} />
         </Routes>
     );
 };

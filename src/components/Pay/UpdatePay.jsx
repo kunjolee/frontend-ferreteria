@@ -8,7 +8,7 @@ const initialForm = {
     tipo: '',
 };
 
-export const UpdatePay = ({ IdPago = 0 }) => {
+export const UpdatePay = ({ idPago = 0 }) => {
     const { formState, onInputChange, onResetForm, tipo } = useForm(initialForm);
     const [loading, setLoading] = useState(false);
     const [textResponse, setTextResponse] = useState('');
@@ -20,15 +20,15 @@ export const UpdatePay = ({ IdPago = 0 }) => {
 
         try {
             const { data } = await api.post('/updateFormaPago', {
-                IdPago,
-                ...fromState,
+                idPago,
+                ...formState,
             });
 
             const { response_description } = data;
 
             setTextResponse(response_description);
-            onResetForm();
-            handleClose();
+            // onResetForm();
+            // handleClose();
         } catch (error) {
             console.log('Error updating Pay');
         } finally {

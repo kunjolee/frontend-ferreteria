@@ -19,7 +19,7 @@ export const PayPage = () => {
             setLoading(true);
             try {
                 const { data } = await api.get('/listFormaPagos');
-                setData(data.pay);
+                setData(data.formaPago);
             } catch (error) {
                 console.log('Error fetching data');
             } finally {
@@ -34,11 +34,11 @@ export const PayPage = () => {
         setPayToEdit(currentpay);
     };
 
-    const handleDeleted = async (e, IdPago) => {
+    const handleDeleted = async (e, idPago) => {
         if (confirm('Are you sure you want to delete this payment method')) {
             try {
                 const { data } = await api.post('/deleteFormaPago', {
-                    IdPago,
+                    idPago,
                 });
                 const { response_description } = data;
                 setTextResponse(response_description);
@@ -63,8 +63,9 @@ export const PayPage = () => {
                     </thead>
                     <tbody>
                         {data?.map((el) => (
-                            <tr key={el.IdPago}>
-                                <td>{el.Tipo}</td>
+                            <tr key={el.idPago}>
+                                <td>{el.idPago}</td>
+                                <td>{el.tipo}</td>
                                 <td>
                                     <Button variant='warning' onClick={() => handleClick(el)}>
                                         <FiEdit height={59} />
@@ -72,7 +73,7 @@ export const PayPage = () => {
                                     &nbsp;
                                     <Button
                                         variant='danger'
-                                        onClick={(e) => handleDeleted(e, el.IdPago)}
+                                        onClick={(e) => handleDeleted(e, el.idPago)}
                                     >
                                         <MdDeleteOutline />
                                     </Button>
@@ -85,15 +86,15 @@ export const PayPage = () => {
             {textResponse && <p style={{ fontSize: '32px' }}>{textResponse}</p>}
 
             <Button variant='primary' onClick={() => handleClick()}>
-                Add new Client
+                Add new payment method
             </Button>
             {!PayToEdit ? (
                 <ModalLayout modalTitle='Save your newpayment method'>
                     <SavePay />
                 </ModalLayout>
             ) : (
-                <ModalLayout modalTitle={`Update payment method: ${PayToEdit.Tipo}`}>
-                    <UpdatePay IdPago={PayToEdit.IdPago} />
+                <ModalLayout modalTitle={`Update payment method: ${PayToEdit.tipo}`}>
+                    <UpdatePay idPago={PayToEdit.idPago} />
                 </ModalLayout>
             )}
         </AppLayout>
