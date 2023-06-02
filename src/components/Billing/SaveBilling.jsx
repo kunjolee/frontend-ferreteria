@@ -43,11 +43,14 @@ export const SaveBilling = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // TODO: list empleados
+                const { data } = await api.get('/listEmpleados');
+                const { empleados } = data;
                 setFormState((currentState) => ({
                     ...currentState,
-                    idEmpleado: 1,
+                    idEmpleado: empleados[0].idEmpleado,
                 }));
+
+                setEmpleados(empleados);
             } catch (error) {
                 console.log('Error getting formaPago', error);
             }
@@ -151,9 +154,11 @@ export const SaveBilling = () => {
                                 name='idEmpleado'
                                 value={idEmpleado}
                             >
-                                <option value='1'>Empleado 1</option>
-                                <option value='2'>Empleado 2</option>
-                                <option value='3'>Empleado 3</option>
+                                {empleados.map((el) => (
+                                    <option key={el.idEmpleado} value={el.idEmpleado}>
+                                        {el.nombre}
+                                    </option>
+                                ))}
                             </Form.Select>
                         </Form.Group>
 
