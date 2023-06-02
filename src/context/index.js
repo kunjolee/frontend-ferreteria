@@ -4,3 +4,4 @@ export { ArticleProvider, articleContext } from './Articles/ArticleContext';
 export { ClientProvider, clientContext } from './Clients/ClientContext';
 export { UserProvider, userContext } from './Users/UserContext';
 export { payContext, PayProvider } from './Pay/PayContext';
+export { EmpleadoProvider, empleadoContext } from './Employees/EmpleadoContext';

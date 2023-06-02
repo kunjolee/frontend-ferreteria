@@ -65,9 +65,6 @@ export const SaveBilling = () => {
         if (confirm('Are you sure you want to buy these items?')) {
             setLoading(true);
             try {
-                console.log('formState', { formState });
-                console.log('cart', { cart });
-                console.log('quiero ver cual es mi total', { total });
                 const saveFacturaData = {
                     ...formState,
                     total,
@@ -75,7 +72,6 @@ export const SaveBilling = () => {
 
                 const res = await api.post('/saveFactura', saveFacturaData);
                 const { idFactura } = res.data;
-                console.log('quiero ver si el idFactura esta bien', idFactura);
 
                 for (const article of cart.articles) {
                     const { idArticulo, cantidad, subtotal } = article;

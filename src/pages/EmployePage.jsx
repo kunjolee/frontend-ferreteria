@@ -2,24 +2,24 @@ import { useContext, useEffect, useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { FiEdit, MdDeleteOutline } from 'react-icons/all';
 
-import { clientContext, modalContext } from '../context/';
+import { empleadoContext, modalContext } from '../context';
 import { AppLayout, ModalLayout } from '../layouts/';
-import { SaveClient, UpdateClient } from '../components/Client/';
+import { SaveEmpleado, UpdateEmpleado } from '../components/Empleados/';
 import { api } from '../api';
 import { swalMessage } from '../helpers';
 
-export const ClientsPage = () => {
+export const EmployePage = () => {
     const { handleShow } = useContext(modalContext);
-    const { getClients, clients, deleteClient } = useContext(clientContext);
+    const { empleados, getEmpleados, deleteEmpleado } = useContext(empleadoContext);
     const [loading, setLoading] = useState(false);
-    const [ClientToEdit, setClientToEdit] = useState(null);
+    const [empleadoToEdit, setEmpleadoToEdit] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const { data } = await api.get('/listClients');
-                getClients(data?.client);
+                const { data } = await api.get('/listEmpleados');
+                getEmpleados(data?.empleados);
             } catch (error) {
                 console.log('Error fetching data');
             } finally {
@@ -29,52 +29,54 @@ export const ClientsPage = () => {
         fetchData();
     }, []);
 
-    const handleClick = (currentClient) => {
+    const handleClick = (currentempleado) => {
         handleShow();
-        setClientToEdit(currentClient);
+        setEmpleadoToEdit(currentempleado);
     };
-    const handleDeleted = async (e, idCliente) => {
-        if (confirm('Are you sure you want to delete this Client?')) {
+
+    const handleDeleted = async (e, idEmpleado) => {
+        if (confirm('Are you sure you want to delete this empleado?')) {
             try {
-                const { data } = await api.post('/deleteClients', {
-                    idCliente,
+                const { data } = await api.post('/deleteEmpleado', {
+                    idEmpleado,
                 });
                 const { response_description, response } = data;
+
                 if (response === 0) {
                     throw new Error('Error!');
                 }
-                deleteClient(idCliente);
+                deleteEmpleado(idEmpleado);
                 swalMessage({ text: response_description, title: 'Deleted!' });
             } catch (error) {
-                console.log('Error deleting client', error);
-                swalMessage('Something went wrong', 'Error!', 'error');
+                console.log('Error deleting empleado', error);
+                swalMessage({ text: 'Something went wrong', title: 'Error!', icon: 'error' });
             }
         }
     };
 
     return (
         <AppLayout>
-            <h2>Clients page</h2>
+            <h2>Employees page</h2>
             {loading ? (
                 <p>Loading....</p>
             ) : (
                 <Table striped bordered hover variant='dark' style={{ textAlign: 'center' }}>
                     <thead>
                         <tr>
-                            <th>idCliente</th>
+                            <th>idEmpleado</th>
                             <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>DPI</th>
+                            <th>apellido</th>
+                            <th>User email</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {clients?.map((el) => (
-                            <tr key={el.idCliente}>
-                                <td>{el.idCliente}</td>
+                        {empleados?.map((el) => (
+                            <tr key={el.idEmpleado}>
+                                <td>{el.idEmpleado}</td>
                                 <td>{el.nombre}</td>
                                 <td>{el.apellido}</td>
-                                <td>{el.dpi}</td>
+                                <td>{el.correo}</td>
                                 <td>
                                     <Button variant='warning' onClick={() => handleClick(el)}>
                                         <FiEdit height={59} />
@@ -82,7 +84,7 @@ export const ClientsPage = () => {
                                     &nbsp;
                                     <Button
                                         variant='danger'
-                                        onClick={(e) => handleDeleted(e, el.idCliente)}
+                                        onClick={(e) => handleDeleted(e, el.idEmpleado)}
                                     >
                                         <MdDeleteOutline />
                                     </Button>
@@ -94,15 +96,15 @@ export const ClientsPage = () => {
             )}
 
             <Button variant='primary' onClick={() => handleClick()}>
-                Add new Client
+                Add new empleado
             </Button>
-            {!ClientToEdit ? (
-                <ModalLayout modalTitle='Save your new Client!'>
-                    <SaveClient />
+            {!empleadoToEdit ? (
+                <ModalLayout modalTitle='Save your new empleado!'>
+                    <SaveEmpleado />
                 </ModalLayout>
             ) : (
-                <ModalLayout modalTitle={`Update Client: ${ClientToEdit.nombre}`}>
-                    <UpdateClient cliente={ClientToEdit} />
+                <ModalLayout modalTitle={`Update empleado: ${empleadoToEdit.nombre}`}>
+                    <UpdateEmpleado empleado={empleadoToEdit} />
                 </ModalLayout>
             )}
         </AppLayout>

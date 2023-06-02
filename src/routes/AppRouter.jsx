@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import {
     HomePage,
     ArticlePage,
@@ -7,6 +7,7 @@ import {
     ShoppingPage,
     PurchasePage,
     PayPage,
+    EmployePage,
 } from '../pages';
 import { BillingHistory } from '../pages/BillingHistory';
 import { BillingDetails } from '../components/Billing/BillingDetails';
@@ -15,7 +16,7 @@ export const AppRouter = () => {
     return (
         <Routes>
             {/* HomePage */}
-            <Route path='/*' element={<HomePage />} />
+            <Route path='/' element={<HomePage />} />
 
             {/* ArticlePage */}
             <Route path='/articles' element={<ArticlePage />} />
@@ -34,6 +35,9 @@ export const AppRouter = () => {
 
             <Route path='/billing-details' element={<BillingDetails />} />
             <Route path='/payment-method' element={<PayPage />} />
+            <Route path='/employees' element={<EmployePage />} />
+
+            <Route path='/*' element={<Navigate to='/' />} />
         </Routes>
     );
 };

@@ -25,6 +25,9 @@ export const CustomNavbar = () => {
                             <NavDropdown.Item as={Link} to='/payment-method'>
                                 Payment Method
                             </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to='/employees'>
+                                Empleados
+                            </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to='/shopping'>
                                 Shopping
                             </NavDropdown.Item>

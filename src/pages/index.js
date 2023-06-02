@@ -5,3 +5,4 @@ export * from './ClientsPage';
 export * from './ShoppingPage';
 export * from './PurchasePage';
 export * from './PayPage';
+export * from './EmployePage';

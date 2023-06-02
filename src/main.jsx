@@ -5,6 +5,7 @@ import {
     ArticleProvider,
     CartProvider,
     ClientProvider,
+    EmpleadoProvider,
     ModalProvider,
     PayProvider,
     UserProvider,
@@ -20,9 +21,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <ClientProvider>
                     <UserProvider>
                         <PayProvider>
-                            <BrowserRouter>
-                                <App />
-                            </BrowserRouter>
+                            <EmpleadoProvider>
+                                <BrowserRouter>
+                                    <App />
+                                </BrowserRouter>
+                            </EmpleadoProvider>
                         </PayProvider>
                     </UserProvider>
                 </ClientProvider>
