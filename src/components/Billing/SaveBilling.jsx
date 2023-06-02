@@ -86,11 +86,10 @@ export const SaveBilling = () => {
                     };
 
                     await api.post('/saveFacturaDetalle', saveFacturaDetalleData);
-
-                    swalMessage({ text: 'Purchase made correctly', title: 'Saved!' });
-                    emptyCart();
-                    navigate('/shopping');
                 }
+                swalMessage({ text: 'Purchase made correctly', title: 'Saved!' });
+                emptyCart();
+                navigate('/shopping');
             } catch (error) {
                 console.log('Error al guardar factura', error);
             } finally {
